@@ -9,7 +9,8 @@ function str2Sha512(data: string) {
 }
 export interface CacheConfig {
   enable?: boolean,
-  dirPath?: string
+  dirPath?: string,
+  ignoreCacheHttpCodes?: number[]
 }
 
 export function createConfig(adapterConfig: CacheConfig) {
@@ -23,7 +24,7 @@ export function createConfig(adapterConfig: CacheConfig) {
     })
     const cacheFilePath = `${dir}/${sha512}.json`;
 
-    if (existsSync(cacheFilePath) || enabled) {
+    if (existsSync(cacheFilePath) && enabled) {
       const cachedResponse: AxiosResponse = JSON.parse(readFileSync(cacheFilePath).toString('UTF-8'));
       console.log("[cached]: ", config.url)
       return Promise.resolve(cachedResponse);
