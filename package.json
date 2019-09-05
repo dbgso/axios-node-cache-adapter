@@ -1,6 +1,6 @@
 {
-  "name": "typescript-node-base",
-  "version": "0.1.0",
+  "name": "axios-cache-adapter",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node ./src/index.ts",
@@ -11,11 +11,12 @@
     "start": "node ."
   },
   "keywords": [],
-  "author": "Nobutaka OSHIRO",
+  "author": "dbgso",
   "license": "ISC",
-  "description": "",
+  "description": "axios adapter for caching response for nodejs. ",
   "dependencies": {
-    "typescript": "^3.3.3"
+    "typescript": "^3.3.3",
+    "axios": "^0.19.0"
   },
   "devDependencies": {
     "@types/node": "^10.12.23",
