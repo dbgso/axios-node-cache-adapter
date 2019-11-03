@@ -27,20 +27,6 @@ class NullCahcer implements Cacher {
   }
 }
 
-class ArrayBufferCacher implements Cacher{
-  encode(data: any) {
-    throw new Error("Method not implemented.");
-  }
-  
-  decode(data: any) {
-    return new Buffer(data)
-  }
-}
-
-const cachers: Map<string|undefined, Cacher> = new Map()
-cachers.set("text", new NullCahcer())
-cachers.set("arraybuffer", new ArrayBufferCacher())
-
 class CacheInstance {
 
   constructor() {
@@ -56,37 +42,33 @@ class CacheInstance {
     writeFileSync(`${path}/config`, JSON.stringify(response.config))
     writeFileSync(`${path}/data`, response.data)
     writeFileSync(`${path}/headers`, JSON.stringify(response.headers))
-    writeFileSync(`${path}/request`, JSON.stringify(response.request))
+    writeFileSync(`${path}/request`, undefined)
+  }
+  private loadWithResponseType(response: AxiosResponse, path: string) {
+    if (response.config.responseType === 'arraybuffer')
+      return readFileSync(path)
+    return readFileSync(path).toString();
   }
   load(path: string): AxiosResponse {
-    return {
+    const response: AxiosResponse = {
       status: parseInt(readFileSync(`${path}/status`).toString()),
       config: JSON.parse(readFileSync(`${path}/config`).toString()),
-      data: readFileSync(`${path}/data`),
+      data: undefined,
       headers: JSON.parse(readFileSync(`${path}/headers`).toString()),
       request: undefined,
       statusText: readFileSync(`${path}/statusText`).toString()
-    }
-    
-
-    const a = readFileSync("").toJSON()
-    
-    
-    
-    readFileSync(`${path}/request`)
-    
+    };
+    response.data = this.loadWithResponseType(response, `${path}/data`)
+    return response
   }
 }
 
 const c = new CacheInstance()
- 
+
 
 export function createConfig(adapterConfig: CacheConfig) {
   const axiosCacheAdapter: AxiosAdapter = async (config: AxiosRequestConfig) => {
-    const cacher = cachers.get(config.responseType) || new NullCahcer();
-    // const cacher = new ArrayBufferCacher();
-
-    const sha512 = str2Sha512(`${config.url} ${config.method}`);
+    const sha512 = str2Sha512(`${config.url} ${config.method} ${config.responseType}`);
 
     const enabled = adapterConfig.enable === undefined ? true : adapterConfig.enable;
     const dir = adapterConfig.dirPath || `./.cache/`;
@@ -96,16 +78,9 @@ export function createConfig(adapterConfig: CacheConfig) {
     const cacheFilePath = `${dir}/${sha512}.json`;
     const dd = `${dir}/${sha512}`;
 
-    if (c.exists(dd)) {
-      // writeFileSync("data", c.load(dd).data)
-      return c.load(dd).data
-    }
-    if (existsSync(cacheFilePath) && enabled) {
-      const cachedResponse: AxiosResponse = JSON.parse(readFileSync(cacheFilePath).toString('UTF-8'));
-      
-      // cachedResponse.data = cacher.decode(cachedResponse.data)
+    if (c.exists(dd) && enabled) {
       console.log("[cached]: ", config.url)
-      return Promise.resolve(cachedResponse);
+      return c.load(dd)
     } else {
       config.adapter = undefined; // disabled for calling own infinity
       const res = config.transformResponse
@@ -116,17 +91,8 @@ export function createConfig(adapterConfig: CacheConfig) {
       config.transformRequest = req
       config.transformResponse = res
 
-      writeFileSync(cacheFilePath, JSON.stringify({
-        status: response.status,
-        statusText: response.statusText,
-        config: response.config,
-        data: response.data,
-        headers: response.headers,
-        request: undefined//response.request
-      }))
       c.dump(response, dd)
 
-      console.log("hoge", response)
       return response;
     }
   }
