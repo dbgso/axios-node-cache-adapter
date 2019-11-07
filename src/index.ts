@@ -53,7 +53,7 @@ class CacheInstance {
   }
 }
 
-const c = new CacheInstance()
+const cache = new CacheInstance()
 
 
 export function createConfig(adapterConfig: CacheConfig) {
@@ -65,12 +65,11 @@ export function createConfig(adapterConfig: CacheConfig) {
     mkdirSync(dir, {
       recursive: true
     })
-    const cacheFilePath = `${dir}/${sha512}.json`;
-    const dd = `${dir}/${sha512}`;
+    const cacheDirpath = `${dir}/${sha512}`;
 
-    if (c.exists(dd) && enabled) {
+    if (cache.exists(cacheDirpath) && enabled) {
       console.log("[cached]: ", config.url)
-      return c.load(dd)
+      return cache.load(cacheDirpath)
     } else {
       config.adapter = undefined; // disabled for calling own infinity
       const res = config.transformResponse
@@ -81,7 +80,7 @@ export function createConfig(adapterConfig: CacheConfig) {
       config.transformRequest = req
       config.transformResponse = res
 
-      c.dump(response, cacheDirpath)
+      cache.dump(response, cacheDirpath)
 
       return response;
     }
