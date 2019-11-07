@@ -1,6 +1,7 @@
 import axios, { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from "axios";
 import { createHash } from "crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import cookiejar from "axios-cookiejar-support";
 
 function str2Sha512(data: string) {
   const hash = createHash('sha512')
@@ -13,19 +14,8 @@ export interface CacheConfig {
   ignoreCacheHttpCodes?: number[]
 }
 
-interface Cacher {
-  encode(data: any): any
-  decode(data: any): Buffer
-}
-
-class NullCahcer implements Cacher {
-  encode(data: any) {
-    return data;
-  }
-  decode(data: any): Buffer {
-    return data;
-  }
-}
+// for cookie support
+cookiejar(axios)
 
 class CacheInstance {
 
@@ -91,7 +81,7 @@ export function createConfig(adapterConfig: CacheConfig) {
       config.transformRequest = req
       config.transformResponse = res
 
-      c.dump(response, dd)
+      c.dump(response, cacheDirpath)
 
       return response;
     }
