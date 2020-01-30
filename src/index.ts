@@ -33,7 +33,6 @@ export function createConfig(adapterConfig: CacheConfig) {
     const cacheDirpath = `${dir}/${sha512}`;
 
     if (cache.exists(cacheDirpath) && enabled) {
-      console.log("[cached]: ", config.url)
       return cache.load(cacheDirpath)
     } else {
       config.adapter = undefined; // disabled for calling own infinity
