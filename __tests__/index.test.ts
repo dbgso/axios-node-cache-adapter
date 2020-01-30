@@ -1,11 +1,10 @@
 import axios, { AxiosInstance } from "axios";
-import { createConfig } from "../src/index";
-import fs from "fs"
 import del from "del";
+import { setupCache } from "../src/index";
 
 describe("responseType null", () => {
     const io = axios.create({
-        adapter: createConfig({
+        adapter: setupCache({
             // enable: false
         }),
     })
@@ -27,7 +26,7 @@ describe("responseType null", () => {
 describe('responseType arraybuffer', () => {
     test('arraybuffer', async () => {
         const arrayBufferIo = axios.create({
-            adapter: createConfig({
+            adapter: setupCache({
             }),
             responseType: "arraybuffer"
         })
@@ -36,7 +35,7 @@ describe('responseType arraybuffer', () => {
 
     test('image', async () => {
         const arrayBufferIo = axios.create({
-            adapter: createConfig({
+            adapter: setupCache({
             }),
             responseType: "arraybuffer"
         })

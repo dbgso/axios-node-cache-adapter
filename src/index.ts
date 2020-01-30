@@ -21,7 +21,7 @@ cookiejar(axios)
 const cache = new CacheInstance()
 
 
-export function createConfig(adapterConfig: CacheConfig) {
+export function setupCache(adapterConfig: CacheConfig) {
   const axiosCacheAdapter: AxiosAdapter = async (config: AxiosRequestConfig) => {
     const sha512 = str2Sha512(`${config.url} ${config.method} ${config.responseType}`);
 
