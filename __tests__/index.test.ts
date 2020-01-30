@@ -44,6 +44,22 @@ describe('responseType arraybuffer', () => {
 
 })
 
+describe('hoge', () =>{
+  it ('should be check maxage', async () => {
+    console.log('age');
+
+    const io = axios.create({
+      adapter: setupCache({
+        maxAge: 61000,
+      })
+    });
+
+    const response = await io.get('http://localhost:8001/logo.png');
+    console.log(response.headers);
+
+    expect(response).not.toBeNull();
+  })
+})
 async function request(io: AxiosInstance, url: string) {
     const noncached = await io.get<string>(url);
     expect(noncached.status).toBe(200);

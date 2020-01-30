@@ -12,16 +12,17 @@ function str2Sha512(data: string) {
 export interface CacheConfig {
   enable?: boolean,
   dirPath?: string,
-  ignoreCacheHttpCodes?: number[]
+  ignoreCacheHttpCodes?: number[]// not implemented,
+  maxAge?: number
 }
 
 // for cookie support
 cookiejar(axios)
 
-const cache = new CacheInstance()
-
-
 export function setupCache(adapterConfig: CacheConfig) {
+  const cache = new CacheInstance({
+    maxAge: adapterConfig.maxAge || 0
+  })
   const enabled = adapterConfig.enable === undefined ? true : adapterConfig.enable;
   const dir = adapterConfig.dirPath || `./.cache/`;
   mkdirSync(dir, {
