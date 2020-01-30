@@ -1,7 +1,8 @@
-import axios, { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from "axios";
-import { createHash } from "crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import axios, { AxiosAdapter, AxiosRequestConfig } from "axios";
 import cookiejar from "axios-cookiejar-support";
+import { createHash } from "crypto";
+import { mkdirSync } from "fs";
+import { CacheInstance } from "./CacheInstance";
 
 function str2Sha512(data: string) {
   const hash = createHash('sha512')
@@ -16,42 +17,6 @@ export interface CacheConfig {
 
 // for cookie support
 cookiejar(axios)
-
-class CacheInstance {
-
-  constructor() {
-  }
-  exists(path: string) {
-    return existsSync(path)
-  }
-  dump(response: AxiosResponse, path: string) {
-    if (!existsSync(path))
-      mkdirSync(path)
-    writeFileSync(`${path}/status`, JSON.stringify(response.status))
-    writeFileSync(`${path}/statusText`, JSON.stringify(response.statusText))
-    writeFileSync(`${path}/config`, JSON.stringify(response.config))
-    writeFileSync(`${path}/data`, response.data)
-    writeFileSync(`${path}/headers`, JSON.stringify(response.headers))
-    writeFileSync(`${path}/request`, undefined)
-  }
-  private loadWithResponseType(response: AxiosResponse, path: string) {
-    if (response.config.responseType === 'arraybuffer')
-      return readFileSync(path)
-    return readFileSync(path).toString();
-  }
-  load(path: string): AxiosResponse {
-    const response: AxiosResponse = {
-      status: parseInt(readFileSync(`${path}/status`).toString()),
-      config: JSON.parse(readFileSync(`${path}/config`).toString()),
-      data: undefined,
-      headers: JSON.parse(readFileSync(`${path}/headers`).toString()),
-      request: undefined,
-      statusText: readFileSync(`${path}/statusText`).toString()
-    };
-    response.data = this.loadWithResponseType(response, `${path}/data`)
-    return response
-  }
-}
 
 const cache = new CacheInstance()
 
