@@ -22,14 +22,14 @@ const cache = new CacheInstance()
 
 
 export function setupCache(adapterConfig: CacheConfig) {
+  const enabled = adapterConfig.enable === undefined ? true : adapterConfig.enable;
+  const dir = adapterConfig.dirPath || `./.cache/`;
+  mkdirSync(dir, {
+    recursive: true
+  })
+
   const axiosCacheAdapter: AxiosAdapter = async (config: AxiosRequestConfig) => {
     const sha512 = str2Sha512(`${config.url} ${config.method} ${config.responseType}`);
-
-    const enabled = adapterConfig.enable === undefined ? true : adapterConfig.enable;
-    const dir = adapterConfig.dirPath || `./.cache/`;
-    mkdirSync(dir, {
-      recursive: true
-    })
     const cacheDirpath = `${dir}/${sha512}`;
 
     if (cache.exists(cacheDirpath) && enabled) {
