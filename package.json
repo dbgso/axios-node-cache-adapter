@@ -1,5 +1,5 @@
 {
-  "name": "axios-node-js-cache-adapter",
+  "name": "axios-node-cache-adapter",
   "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
