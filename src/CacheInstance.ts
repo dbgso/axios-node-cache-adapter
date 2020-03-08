@@ -28,7 +28,9 @@ export class CacheInstance {
   }
   dump(response: AxiosResponse, path: string) {
     if (!existsSync(path))
-      mkdirSync(path);
+      mkdirSync(path, {
+        recursive: true
+      });
     writeFileSync(`${path}/status`, JSON.stringify(response.status));
     writeFileSync(`${path}/statusText`, JSON.stringify(response.statusText));
     writeFileSync(`${path}/config`, JSON.stringify(response.config));
