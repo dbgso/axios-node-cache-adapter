@@ -21,7 +21,7 @@ export class CacheInstance {
     const d = new Date(options.timestamp);
     d.getTime();
     const delta = now.getTime() - d.getTime()
-    if (delta > this.option.maxAge) {
+    if (delta > this.option.maxAge && this.option.maxAge > 0) {
       return false;
     }
     return existsSync(path);
