@@ -1,6 +1,6 @@
-# axios-node-cache-adaptor
+# axios-node-cache-adapter
 
-* Axios cache adaptor for Node.js
+* Axios cache adapter for Node.js
 * Ignore to useless requests to server.
 * Inspired by scrapy.
 
@@ -14,7 +14,7 @@ $ npm install axios-node-cache-adapter
 
 ```typescript
 import axiso from "axios";
-import { setupCache } from "../src";
+import { setupCache } from "axios-node-cache-adapter";
 async function main() {
     const io = axiso.create({
         adapter: setupCache({
