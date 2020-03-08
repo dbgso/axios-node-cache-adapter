@@ -14,7 +14,7 @@ $ npm install axios-node-cache-adapter
 
 ```typescript
 import axiso from "axios";
-import { setupCache } from "../src";
+import { setupCache } from "axios-node-cache-adapter";
 async function main() {
     const io = axiso.create({
         adapter: setupCache({
