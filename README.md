@@ -7,9 +7,9 @@
 # Usage
 
 ```
-$ yarn add axios-node-cache-adapter
+$ yarn add @dbgso/axios-node-cache-adapter
 // or
-$ npm install axios-node-cache-adapter
+$ npm install @dbgso/axios-node-cache-adapter
 ```
 
 ```typescript
