@@ -22,7 +22,7 @@
   "license": "ISC",
   "description": "axios adapter for caching response for nodejs. ",
   "files": [
-    "dist"
+    "dist", "README.md"
   ],
   "repository": {
     "type": "git",
