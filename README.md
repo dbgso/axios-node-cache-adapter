@@ -1,7 +1,7 @@
 # axios-node-cache-adapter
 
 * Axios cache adapter for Node.js
-* Ignore to useless requests to server.
+* Created for avoiding useless request to servers.
 * Inspired by scrapy.
 
 # Usage
