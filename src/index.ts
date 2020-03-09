@@ -45,6 +45,12 @@ export function setupCache(adapterConfig: CacheConfig) {
       config.transformRequest = req
       config.transformResponse = res
 
+      // ignore http status
+      if (adapterConfig.ignoreCacheHttpCodes) {
+        if (adapterConfig.ignoreCacheHttpCodes.includes(response.status))
+          return response;
+      }
+
       cache.dump(response, cacheDirpath)
 
       return response;

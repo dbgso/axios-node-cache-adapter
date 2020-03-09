@@ -1,6 +1,6 @@
 {
   "name": "@dbgso/axios-node-cache-adapter",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node ./src/index.ts",
@@ -13,10 +13,21 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "keywords": ["axios", "cache", "http"],
+  "keywords": [
+    "axios",
+    "cache",
+    "http"
+  ],
   "author": "dbgso",
   "license": "ISC",
   "description": "axios adapter for caching response for nodejs. ",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dbgso/axios-node-cache-adapter.git"
+  },
   "dependencies": {
     "axios": "^0.19.0",
     "axios-cookiejar-support": "^0.5.0",
