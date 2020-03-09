@@ -21,6 +21,7 @@
   "author": "dbgso",
   "license": "ISC",
   "description": "axios adapter for caching response for nodejs. ",
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "git@github.com:dbgso/axios-node-cache-adapter.git"
