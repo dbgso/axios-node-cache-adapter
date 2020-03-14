@@ -2,20 +2,14 @@ import axios, { AxiosAdapter, AxiosRequestConfig } from "axios";
 import cookiejar from "axios-cookiejar-support";
 import { createHash } from "crypto";
 import { mkdirSync } from "fs";
-import { CacheInstance } from "./CacheInstance";
+import { CacheInstance } from "./lib/CacheInstance";
+import { CacheConfig } from "./types";
 
 function str2Sha512(data: string) {
   const hash = createHash('sha512')
   hash.update(data)
   return hash.digest('hex');
 }
-export interface CacheConfig {
-  enable?: boolean,
-  dirPath?: string,
-  ignoreCacheHttpCodes?: number[]// not implemented,
-  maxAge?: number
-}
-
 // for cookie support
 cookiejar(axios)
 
