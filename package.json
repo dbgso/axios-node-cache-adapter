@@ -1,6 +1,6 @@
 {
   "name": "@dbgso/axios-node-cache-adapter",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node ./src/index.ts",
@@ -22,7 +22,8 @@
   "license": "ISC",
   "description": "axios adapter for caching response for nodejs. ",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "repository": {
     "type": "git",
