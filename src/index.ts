@@ -1,4 +1,4 @@
-import axios, { AxiosAdapter, AxiosRequestConfig } from "axios";
+import axios, { AxiosAdapter, AxiosRequestConfig, AxiosResponse } from "axios";
 import cookiejar from "axios-cookiejar-support";
 import { createHash } from "crypto";
 import { mkdirSync } from "fs";
@@ -39,11 +39,9 @@ export function setupCache(adapterConfig: CacheConfig) {
       config.transformRequest = req
       config.transformResponse = res
 
-      // ignore http status
-      if (adapterConfig.ignoreCacheHttpCodes) {
-        if (adapterConfig.ignoreCacheHttpCodes.includes(response.status))
-          return response;
-      }
+      let ignore = isCacheIgnore(adapterConfig, response, config);
+      if (ignore)
+        return response;
 
       cache.dump(response, cacheDirpath)
 
@@ -51,5 +49,23 @@ export function setupCache(adapterConfig: CacheConfig) {
     }
   }
   return axiosCacheAdapter;
+}
+
+function isCacheIgnore(adapterConfig: CacheConfig, response: AxiosResponse<any>, config: AxiosRequestConfig) {
+  // ignore http status
+  if (adapterConfig.ignoreCacheHttpCodes) {
+    if (adapterConfig.ignoreCacheHttpCodes.includes(response.status))
+      return true;
+  }
+
+
+
+  // ignore method
+  if (adapterConfig.ignoreMethods && config.method) {
+    if (adapterConfig.ignoreMethods.map(e => e.toLowerCase()).includes(config.method.toLowerCase())) {
+      return true;
+    }
+  }
+  return false;
 }
 

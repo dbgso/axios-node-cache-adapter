@@ -1,6 +1,9 @@
+import { Method } from "axios";
+
 export interface CacheConfig {
   enable?: boolean;
   dirPath?: string;
-  ignoreCacheHttpCodes?: number[]; // not implemented,
+  ignoreCacheHttpCodes?: number[];
+  ignoreMethods?: Method[];
   maxAge?: number;
 }

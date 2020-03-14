@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import del from "del";
+import { existsSync, readdirSync } from "fs";
 import { setupCache } from "../src/index";
 
 describe("responseType null", () => {
@@ -44,21 +45,21 @@ describe('responseType arraybuffer', () => {
 
 })
 
-describe('hoge', () =>{
-  it ('should be check maxage', async () => {
-    console.log('age');
+describe('hoge', () => {
+    it('should be check maxage', async () => {
+        console.log('age');
 
-    const io = axios.create({
-      adapter: setupCache({
-        maxAge: 61000,
-      })
-    });
+        const io = axios.create({
+            adapter: setupCache({
+                maxAge: 61000,
+            })
+        });
 
-    const response = await io.get('http://localhost:8001/logo.png');
-    console.log(response.headers);
+        const response = await io.get('http://localhost:8001/logo.png');
+        console.log(response.headers);
 
-    expect(response).not.toBeNull();
-  })
+        expect(response).not.toBeNull();
+    })
 })
 async function request(io: AxiosInstance, url: string) {
     const noncached = await io.get<string>(url);
@@ -68,3 +69,44 @@ async function request(io: AxiosInstance, url: string) {
     expect(noncached.data).toStrictEqual(cached.data);
 }
 
+describe('ignore method', () => {
+    it('get', async () => {
+        const dirpath = "/tmp/test"
+        await del(dirpath, {
+            force: true,
+        })
+
+        // not cached
+        const io = axios.create({
+            adapter: setupCache({
+                ignoreMethods: ["get"],
+                dirPath: dirpath
+            })
+        })
+        await io.get('http://localhost:8001')
+        const io2 = axios.create({
+            adapter: setupCache({
+                ignoreMethods: ["GET"],
+                dirPath: dirpath
+            })
+        })
+        // not cached
+        await io2.get('http://localhost:8001')
+        if (existsSync(dirpath)) {
+            expect(readdirSync(dirpath).length).toBe(0);
+        }
+
+        // cached
+        const io3 = axios.create({
+            adapter: setupCache({
+                dirPath: dirpath,
+            })
+        })
+
+        await io3.get('http://localhost:8001')
+
+        if (existsSync(dirpath))
+            expect(readdirSync(dirpath).length).toBe(1);
+
+    })
+})
